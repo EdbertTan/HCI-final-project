@@ -1,0 +1,1818 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Calendar Planner</title>
+		<style>
+			body {
+				font-family: arial, verdana, serif;
+				font-size:14px;
+			}		
+		
+			td{
+				border: 1px solid #dddddd;
+				vertical-align: top;
+				padding: 2px;
+			}
+			
+			p.monthstart{
+				margin-top:-3px;
+				white-space: nowrap; 
+				padding:3px;
+				text-align:center;
+				font-weight:bold;
+
+/*				color:red; */
+				padding-bottom:10px;
+			}
+			
+			p.restofmonth{
+				margin-top:-3px;
+				white-space: nowrap; 
+				padding:3px;
+				text-align:center;
+				font-weight:bold;
+			}
+			
+/* -------------- modal css ----------------*/
+.mpopup {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    padding-top: 100px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+}
+.modal-content {
+    position: relative;
+    background-color: #fff;
+    margin: auto;
+    padding: 0;
+    width: 600px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+    -webkit-animation-name: animatetop;
+    -webkit-animation-duration: 0.4s;
+    animation-name: animatetop;
+    animation-duration: 0.4s;
+    border-radius: 0.3rem;
+}
+.modal-header {
+    padding: 2px 12px;
+    background-color: #ffffff;
+    color: #333;
+    border-bottom: 1px solid #e9ecef;
+    border-top-left-radius: 0.3rem;
+    border-top-right-radius: 0.3rem;
+}
+.modal-header h2{
+    font-size: 1.25rem;
+    margin-top: 14px;
+    margin-bottom: 14px;
+}
+.modal-body {
+    padding: 2px 12px;
+}
+.modal-footer {
+    padding: 1rem;
+    background-color: #ffffff;
+    color: #333;
+    border-top: 1px solid #e9ecef;
+    border-bottom-left-radius: 0.3rem;
+    border-bottom-right-radius: 0.3rem;
+    text-align: right;
+}
+
+/* add animation effects */
+@-webkit-keyframes animatetop {
+    from {top:-300px; opacity:0}
+    to {top:0; opacity:1}
+}
+
+@keyframes animatetop {
+    from {top:-300px; opacity:0}
+    to {top:0; opacity:1}
+}
+
+.colbutton {
+/*  background-color: #04AA6D;*/
+  border: 1px solid black; 
+  color: white;
+  padding: 8px;
+/*  text-align: center;*/
+  text-decoration: none;
+/*  display: inline-block;*/
+
+/*  font-size: 1px; */
+  
+  margin-top: -20px;
+  border-radius: 50%;
+}
+
+/* -------------- end modal css ----------------*/
+/* -------------- input button ---------------- */
+
+.binput {
+	padding:10px 32px;
+	font-size:16px;
+	margin-bottom:10px;
+}
+
+/* ------------- css untuk display ------------ */
+p.pisi {
+  white-space: nowrap; 
+  width: 120px; 
+  padding:4px;
+  overflow: hidden;
+  text-overflow: ellipsis; 
+  font-weight:bold;
+    border-radius: 0.3rem;
+/*  border: 1px solid #000000;*/
+}
+
+p.pisi2 {
+  white-space: nowrap; 
+  width: 800px; 
+  padding:4px;
+  overflow: hidden;
+  text-overflow: ellipsis; 
+  font-weight:bold;
+    border-radius: 0.3rem;
+/*  border: 1px solid #000000;*/
+}
+
+p.pisi3 {
+  white-space: nowrap; 
+  width: 800px; 
+  padding:4px;
+  overflow: hidden;
+  text-overflow: ellipsis; 
+  font-weight:bold;
+    border-radius: 0.3rem;
+/*  border: 1px solid #000000;*/
+}
+
+p.pisi4 {
+  white-space: nowrap; 
+  width: 100px; 
+  padding:4px;
+  overflow: hidden;
+  text-overflow: ellipsis; 
+  font-weight:bold;
+    border-radius: 0.3rem;
+/*  border: 1px solid #000000;*/
+}
+
+p.pisi5 {
+  white-space: nowrap; 
+  width: 30px; 
+  padding:4px;
+  overflow: hidden;
+  text-overflow: ellipsis; 
+  font-weight:bold;
+    border-radius: 0.3rem;
+/*  border: 1px solid #000000;*/
+}
+
+div.divisi {
+	display:flex;margin-top:-25px;margin-left:5px;	
+}
+
+div.divisi2 {
+	display:flex;margin-top:-10px;margin-left:5px;margin-bottom:-25px;	
+}
+
+div.divisi3 {
+	display:flex;margin-top:-10px;margin-left:5px;margin-bottom:-10px;	
+}
+
+div.divisi4 {
+	display:flex;margin-top:-10px;margin-left:5px;margin-bottom:-10px;	
+}
+
+
+
+/* -------------- end input button ---------------- */
+			
+div.sticky {
+        position: -webkit-sticky;
+        position: sticky;
+        top: 0;
+        background-color: #006;
+        padding: 10px;
+        font-size: 25px;
+		color: white;
+		display: flex;
+    align-items: center;
+}			
+			
+		</style>
+	</head>
+<body onload="gettoday()">
+<div class="sticky">
+				MY DAILY PLANNER 
+
+				&nbsp|&nbsp&nbsp
+				<button style="border-radius:0.3rem;padding-top:-30px;height:22px;font-size:14px;" type="button" onclick="previousmonth()"><b>Prev</b></button>
+
+				&nbsp<label id = "nowtime"></label>&nbsp
+
+				<button style="border-radius:0.3rem;padding-top:-30px;height:22px;font-size:14px;" type="button" onclick="nextmonth()"><b>Next</b></button>
+				&nbsp|&nbsp&nbsp
+
+				<button style="border-radius:0.3rem;padding-top:-30px;height:22px;font-size:14px;" type="button" onclick="dinput(0)"><b>New</b></button> 
+
+				&nbsp|&nbsp&nbsp
+				
+				<button style="border-radius:0.3rem;padding-top:-30px;height:22px;font-size:14px;" type="button" onclick="ganti(1)"><b>Monthly Calendar</b></button>&nbsp
+
+				<button style="border-radius:0.3rem;padding-top:-30px;height:22px;font-size:14px;" type="button" onclick="ganti(2)"><b>Daily Calendar</b></button>&nbsp
+
+				<button style="border-radius:0.3rem;padding-top:-30px;height:22px;font-size:14px;" type="button" onclick="ganti(3)"><b>Task</b></button>
+				&nbsp|
+
+
+
+</div>
+
+	<table style="max-height:100;min-height:100%;">
+		<tr>
+			<td style="width:20%;">
+				<div id="miniprevmonth">
+					<table style="width: 100%;table-layout: fixed;">
+					<tr style="height:20px;">
+						<td colspan="7" id="prevmonthname">
+							
+						</td>
+					</tr>
+					<tr>
+						<th style="width:14%;"><center>Sun</center></th>
+						<th style="width:14%;"><center>Mon</center></th>
+						<th style="width:14%;"><center>Tue</center></th>
+						<th style="width:14%;"><center>Wed</center></th>
+						<th style="width:14%;"><center>Thu</center></th>
+						<th style="width:14%;"><center>Fri</center></th>
+						<th style="width:14%;"><center>Sat</center></th>
+					</tr>
+
+					<tr style="height:20px;">
+						<td id="miniprevmonth0"></td>
+						<td id="miniprevmonth1"></td>
+						<td id="miniprevmonth2"></td>
+						<td id="miniprevmonth3"></td>
+						<td id="miniprevmonth4"></td>
+						<td id="miniprevmonth5"></td>
+						<td id="miniprevmonth6"></td>
+					</tr>
+					<tr style="height:20px;">
+						<td id="miniprevmonth7"></td>
+						<td id="miniprevmonth8"></td>
+						<td id="miniprevmonth9"></td>
+						<td id="miniprevmonth10"></td>
+						<td id="miniprevmonth11"></td>
+						<td id="miniprevmonth12"></td>
+						<td id="miniprevmonth13"></td>
+					</tr>
+					<tr style="height:20px;">
+						<td id="miniprevmonth14"></td>
+						<td id="miniprevmonth15"></td>
+						<td id="miniprevmonth16"></td>
+						<td id="miniprevmonth17"></td>
+						<td id="miniprevmonth18"></td>
+						<td id="miniprevmonth19"></td>
+						<td id="miniprevmonth20"></td>
+					</tr>
+					<tr style="height:20px;">
+						<td id="miniprevmonth21"></td>
+						<td id="miniprevmonth22"></td>
+						<td id="miniprevmonth23"></td>
+						<td id="miniprevmonth24"></td>
+						<td id="miniprevmonth25"></td>
+						<td id="miniprevmonth26"></td>
+						<td id="miniprevmonth27"></td>
+					</tr>
+					<tr style="height:20px;">
+						<td id="miniprevmonth28"></td>
+						<td id="miniprevmonth29"></td>
+						<td id="miniprevmonth30"></td>
+						<td id="miniprevmonth31"></td>
+						<td id="miniprevmonth32"></td>
+						<td id="miniprevmonth33"></td>
+						<td id="miniprevmonth34"></td>
+					</tr>
+					<tr style="height:20px;">
+						<td id="miniprevmonth35"></td>
+						<td id="miniprevmonth36"></td>
+						<td id="miniprevmonth37"></td>
+						<td id="miniprevmonth38"></td>
+						<td id="miniprevmonth39"></td>
+						<td id="miniprevmonth40"></td>
+						<td id="miniprevmonth41"></td>
+					</tr>
+				</table>
+				
+				</div>
+				<div id="mininextmonth">
+				<table style="width: 100%;table-layout: fixed;">
+					<tr style="height:20px;">
+						<td colspan="7" id="nextmonthname">
+							
+						</td>
+					</tr>
+					<tr>
+						<th style="width:14%;"><center>Sun</center></th>
+						<th style="width:14%;"><center>Mon</center></th>
+						<th style="width:14%;"><center>Tue</center></th>
+						<th style="width:14%;"><center>Wed</center></th>
+						<th style="width:14%;"><center>Thu</center></th>
+						<th style="width:14%;"><center>Fri</center></th>
+						<th style="width:14%;"><center>Sat</center></th>
+					</tr>
+					<tr style="height:20px;">
+						<td id="mininextmonth0"></td>
+						<td id="mininextmonth1"></td>
+						<td id="mininextmonth2"></td>
+						<td id="mininextmonth3"></td>
+						<td id="mininextmonth4"></td>
+						<td id="mininextmonth5"></td>
+						<td id="mininextmonth6"></td>
+					</tr>
+					<tr style="height:20px;">
+						<td id="mininextmonth7"></td>
+						<td id="mininextmonth8"></td>
+						<td id="mininextmonth9"></td>
+						<td id="mininextmonth10"></td>
+						<td id="mininextmonth11"></td>
+						<td id="mininextmonth12"></td>
+						<td id="mininextmonth13"></td>
+					</tr>
+					<tr style="height:20px;">
+						<td id="mininextmonth14"></td>
+						<td id="mininextmonth15"></td>
+						<td id="mininextmonth16"></td>
+						<td id="mininextmonth17"></td>
+						<td id="mininextmonth18"></td>
+						<td id="mininextmonth19"></td>
+						<td id="mininextmonth20"></td>
+					</tr>
+					<tr style="height:20px;">
+						<td id="mininextmonth21"></td>
+						<td id="mininextmonth22"></td>
+						<td id="mininextmonth23"></td>
+						<td id="mininextmonth24"></td>
+						<td id="mininextmonth25"></td>
+						<td id="mininextmonth26"></td>
+						<td id="mininextmonth27"></td>
+					</tr>
+					<tr style="height:20px;">
+						<td id="mininextmonth28"></td>
+						<td id="mininextmonth29"></td>
+						<td id="mininextmonth30"></td>
+						<td id="mininextmonth31"></td>
+						<td id="mininextmonth32"></td>
+						<td id="mininextmonth33"></td>
+						<td id="mininextmonth34"></td>
+					</tr>
+					<tr style="height:20px;">
+						<td id="mininextmonth35"></td>
+						<td id="mininextmonth36"></td>
+						<td id="mininextmonth37"></td>
+						<td id="mininextmonth38"></td>
+						<td id="mininextmonth39"></td>
+						<td id="mininextmonth40"></td>
+						<td id="mininextmonth41"></td>
+					</tr>
+				</table>
+				</div>
+			</td>
+			
+			<td  style="width:80%;">
+				<div id="bulanan"  style="display:block;">
+					<table style="width: 100%;table-layout: fixed;">
+					<tr>
+						<th style="width:14%;"><center>Sunday</center></th>
+						<th style="width:14%;"><center>Monday</center></th>
+						<th style="width:14%;"><center>Tuesday</center></th>
+						<th style="width:14%;"><center>Wednesday</center></th>
+						<th style="width:14%;"><center>Thursday</center></th>
+						<th style="width:14%;"><center>Friday</center></th>
+						<th style="width:14%;"><center>Saturday</center></th>
+					</tr>
+					
+					<tr style="height:95px;">
+						<td onclick="dopendaily(0)">
+							<p class="monthstart" id="month0"></p>
+							<div id="isi0"></div>
+						</td>
+						<td onclick="dopendaily(1)">
+							<p class="monthstart" id="month1"></p>
+							<div id="isi1"></div>
+						</td>
+						<td onclick="dopendaily(2)">
+							<p class="monthstart" id="month2"></p>
+							<div id="isi2"></div>
+						</td>
+						<td onclick="dopendaily(3)">
+							<p class="monthstart" id="month3"></p>
+							<div id="isi3"></div>
+						</td>
+						<td onclick="dopendaily(4)">
+							<p class="monthstart" id="month4"></p>
+							<div id="isi4"></div>
+						</td>
+						<td onclick="dopendaily(5)">
+							<p class="monthstart" id="month5"></p>
+							<div id="isi5"></div>
+						</td>
+						<td onclick="dopendaily(6)">
+							<p class="monthstart" id="month6"></p>
+							<div id="isi6"></div>
+						</td>
+					</tr>
+
+					<tr style="height:95px;">
+						<td onclick="dopendaily(7)">
+							<p class="monthstart" id="month7"></p>
+							<div id="isi7"></div>
+						</td>
+						<td onclick="dopendaily(8)">
+							<p class="monthstart" id="month8"></p>
+							<div id="isi8"></div>
+						</td>
+						<td onclick="dopendaily(9)">
+							<p class="monthstart" id="month9"></p>
+							<div id="isi9"></div>
+						</td>
+						<td onclick="dopendaily(10)">
+							<p class="monthstart" id="month10"></p>
+							<div id="isi10"></div>
+						</td>
+						<td onclick="dopendaily(11)">
+							<p class="monthstart" id="month11"></p>
+							<div id="isi11"></div>
+						</td>
+						<td onclick="dopendaily(12)">
+							<p class="monthstart" id="month12"></p>
+							<div id="isi12"></div>
+						</td>
+						<td onclick="dopendaily(13)">
+							<p class="monthstart" id="month13"></p>
+							<div id="isi13"></div>
+						</td>
+					</tr>
+
+					<tr style="height:95px;">
+						<td onclick="dopendaily(14)">
+							<p class="monthstart" id="month14"></p>
+							<div id="isi14"></div>
+						</td>
+						<td onclick="dopendaily(15)">
+							<p class="monthstart" id="month15"></p>
+							<div id="isi15"></div>
+						</td>
+						<td onclick="dopendaily(16)">
+							<p class="monthstart" id="month16"></p>
+							<div id="isi16"></div>
+						</td>
+						<td onclick="dopendaily(17)">
+							<p class="monthstart" id="month17"></p>
+							<div id="isi17"></div>
+						</td>
+						<td onclick="dopendaily(18)">
+							<p class="monthstart" id="month18"></p>
+							<div id="isi18"></div>
+						</td>
+						<td onclick="dopendaily(19)">
+							<p class="monthstart" id="month19"></p>
+							<div id="isi19"></div>
+						</td>
+						<td onclick="dopendaily(20)">
+							<p class="monthstart" id="month20"></p>
+							<div id="isi20"></div>
+						</td>
+					</tr>
+
+					<tr style="height:95px;">
+						<td onclick="dopendaily(21)">
+							<p class="monthstart" id="month21"></p>
+							<div id="isi21"></div>
+						</td>
+						<td onclick="dopendaily(22)">
+							<p class="monthstart" id="month22"></p>
+							<div id="isi22"></div>
+						</td>
+						<td onclick="dopendaily(23)">
+							<p class="monthstart" id="month23"></p>
+							<div id="isi23"></div>
+						</td>
+						<td onclick="dopendaily(24)">
+							<p class="monthstart" id="month24"></p>
+							<div id="isi24"></div>
+						</td>
+						<td onclick="dopendaily(25)">
+							<p class="monthstart" id="month25"></p>
+							<div id="isi25"></div>
+						</td>
+						<td onclick="dopendaily(26)">
+							<p class="monthstart" id="month26"></p>
+							<div id="isi26"></div>
+						</td>
+						<td onclick="dopendaily(27)">
+							<p class="monthstart" id="month27"></p>
+							<div id="isi27"></div>
+						</td>
+					</tr>
+
+					<tr style="height:95px;">
+						<td onclick="dopendaily(28)">
+							<p class="monthstart" id="month28"></p>
+							<div id="isi28"></div>
+						</td>
+						<td onclick="dopendaily(29)">
+							<p class="monthstart" id="month29"></p>
+							<div id="isi29"></div>
+						</td>
+						<td onclick="dopendaily(30)">
+							<p class="monthstart" id="month30"></p>
+							<div id="isi30"></div>
+						</td>
+						<td onclick="dopendaily(31)">
+							<p class="monthstart" id="month31"></p>
+							<div id="isi31"></div>
+						</td>
+						<td onclick="dopendaily(32)">
+							<p class="monthstart" id="month32"></p>
+							<div id="isi32"></div>
+						</td>
+						<td onclick="dopendaily(33)">
+							<p class="monthstart" id="month33"></p>
+							<div id="isi33"></div>
+						</td>
+						<td onclick="dopendaily(34)">
+							<p class="monthstart" id="month34"></p>
+							<div id="isi34"></div>
+						</td>
+					</tr>
+
+					<tr style="height:95px;">
+						<td onclick="dopendaily(35)">
+							<p class="monthstart" id="month35"></p>
+							<div id="isi35"></div>
+						</td>
+						<td onclick="dopendaily(36)">
+							<p class="monthstart" id="month36"></p>
+							<div id="isi36"></div>
+						</td>
+						<td onclick="dopendaily(37)">
+							<p class="monthstart" id="month37"></p>
+							<div id="isi37"></div>
+						</td>
+						<td onclick="dopendaily(38)">
+							<p class="monthstart" id="month38"></p>
+							<div id="isi38"></div>
+						</td>
+						<td onclick="dopendaily(39)">
+							<p class="monthstart" id="month39"></p>
+							<div id="isi39"></div>
+						</td>
+						<td onclick="dopendaily(40)">
+							<p class="monthstart" id="month40"></p>
+							<div id="isi40"></div>
+						</td>
+						<td onclick="dopendaily(41)">
+							<p class="monthstart" id="month41"></p>
+							<div id="isi41"></div>
+						</td>
+					</tr>
+				</table>
+				
+				</div>
+				
+				<div id="harian" style="display:none;">
+					<table id="tab1" style="max-width:100;min-width:100%;max-height:100;min-height:100%;">
+					
+						<tr style="height:40px;">
+							<td style="width:10%;vertical-align:middle;">TIME</td><td id="iday" style="width:90%;vertical-align:middle;"></td>
+							
+						</tr>
+						<tr style="height:80px;">
+							<td>00</td><td id="d0"></td>
+						</tr>
+						<tr style="height:80px;">
+							<td>01</td><td id="d1"></td>
+						</tr>
+						<tr style="height:80px;">
+							<td>02</td><td id="d2"></td>
+						</tr>
+						<tr style="height:80px;">
+							<td>03</td><td id="d3"></td>
+						</tr>
+						<tr style="height:80px;">
+							<td>04</td><td id="d4"></td>
+						</tr>
+						<tr style="height:80px;">
+							<td>05</td><td id="d5"></td>
+						</tr>
+						<tr style="height:80px;">
+							<td>06</td><td id="d6"></td>
+						</tr>
+						<tr style="height:80px;">
+							<td>07</td><td id="d7"></td>
+						</tr>
+						<tr style="height:80px;">
+							<td>08</td><td id="d8"></td>
+						</tr>
+						<tr style="height:80px;">
+							<td>09</td><td id="d9"></td>
+						</tr>
+						<tr style="height:80px;">
+							<td>10</td><td id="d10"></td>
+						</tr>
+						<tr style="height:80px;">
+							<td>11</td><td id="d11"></td>
+						</tr>
+						<tr style="height:80px;">
+							<td>12</td><td id="d12"></td>
+						</tr>
+						<tr style="height:80px;">
+							<td>13</td><td id="d13"></td>
+						</tr>
+						<tr style="height:80px;">
+							<td>14</td><td id="d14"></td>
+						</tr>
+						<tr style="height:80px;">
+							<td>15</td><td id="d15"></td>
+						</tr>
+						<tr style="height:80px;">
+							<td>16</td><td id="d16"></td>
+						</tr>
+						<tr style="height:80px;">
+							<td>17</td><td id="d17"></td>
+						</tr>
+						<tr style="height:80px;">
+							<td>18</td><td id="d18"></td>
+						</tr>
+						<tr style="height:80px;">
+							<td>19</td><td id="d19"></td>
+						</tr>
+						<tr style="height:80px;">
+							<td>20</td><td id="d20"></td>
+						</tr>
+						<tr style="height:80px;">
+							<td>21</td><td id="d21"></td>
+						</tr>
+						<tr style="height:80px;">
+							<td>22</td><td id="d22"></td>
+						</tr>
+						<tr style="height:80px;">
+							<td>23</td><td id="d23"></td>
+						</tr>
+					</table>
+				</div>
+				
+				<div id="task" style="display:none;">
+					<table id="ttask" valign="middle" style="max-width:100;min-width:100%;max-height:100;min-height:100%;font-size:16px;">
+						<tr style="height:40px;">
+							<td style="width:10%;vertical-align:middle;"><center>DATE</center></td>
+							<td style="width:2%;vertical-align:middle;"></td>
+							<td style="width:70%;vertical-align:middle;"><center>TASK</center></td>
+							<td style="width:10%;vertical-align:middle;"><center>DUE</center></td>
+						</tr>
+					</table>
+				</div>
+
+			</td>
+		</tr>
+	</table>
+
+<div id="mpopupBox" class="mpopup">
+
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2><p id="ihead">New</p></h2>
+        </div>
+        <div class="modal-body">
+			<span>
+				<button class="binput" type="button" id="binput1" onclick="gantitype(1)" style="color:white;background-color:green;">Calendar</button>
+				<button class="binput" type="button" id="binput2" onclick="gantitype(2)" style="color:black;background-color:white;">Task</button>
+				
+				<input type="text" id="cid" style="width:20px;" value="0" hidden> <!-- type -->
+				<input type="text" id="intype" style="width:20px;" value="1" hidden> <!-- type -->
+				<input type="text" id="incolor" style="width:20px;" value="0" hidden> <!-- color -->
+				<input type="text" id="inbcolor" style="width:20px;" value="3" hidden> <!-- bcolor -->
+				<input type="text" id="inrepeat" style="width:20px;" value="0" hidden> <!-- repeat -->
+				
+			</span><br>
+
+			<textarea id="tarea" style="width:100%;min-height:80px;font-size:16px;"></textarea>		
+
+			<center><span>
+				<b style="vertical-align:-5px;">Color&nbsp;&nbsp</b>
+				<button class="colbutton" onclick="ganticolor(0)" style="background-color:black;"></button>
+				<button class="colbutton" onclick="ganticolor(1)" style="background-color:blue;"></button>
+				<button class="colbutton" onclick="ganticolor(2)" style="background-color:red;"></button>
+				<button class="colbutton" onclick="ganticolor(3)" style="background-color:white;"></button>
+				<button class="colbutton" onclick="ganticolor(4)" style="background-color:yellow;"></button>
+				<button class="colbutton" onclick="ganticolor(5)" style="background-color:lime;"></button>
+				&nbsp;&nbsp
+				<b style="vertical-align:-5px;">Back-Color&nbsp;&nbsp</b>
+				<button class="colbutton" onclick="ganticolor(10)" style="background-color:black;"></button>
+				<button class="colbutton" onclick="ganticolor(11)" style="background-color:blue;"></button>
+				<button class="colbutton" onclick="ganticolor(12)" style="background-color:red;"></button>
+				<button class="colbutton" onclick="ganticolor(13)" style="background-color:white;"></button>
+				<button class="colbutton" onclick="ganticolor(14)" style="background-color:yellow;"></button>
+				<button class="colbutton" onclick="ganticolor(15)" style="background-color:lime;"></button>
+			</span></center><br>
+
+			<label for="ddate1">Date:&nbsp&nbsp</label><input type="date" id="ddate1" name="ddate1" onchange="cekhari()">&nbsp&nbsp
+
+			<label for="dtime1">Time:</label>&nbsp&nbsp
+			
+			<select name="dtime11" id="dtime11">
+				<option value="00">0</option>
+				<option value="01">1</option>
+				<option value="02">2</option>
+				<option value="03">3</option>
+				<option value="04">4</option>
+				<option value="05">5</option>
+				<option value="06">6</option>
+				<option value="07">7</option>
+				<option value="08">8</option>
+				<option value="09">9</option>
+				<option value="10">10</option>
+				<option value="11">11</option>
+				<option value="12">12</option>
+				<option value="13">13</option>
+				<option value="14">14</option>
+				<option value="15">15</option>
+				<option value="16">16</option>
+				<option value="17">17</option>
+				<option value="18">18</option>
+				<option value="19">19</option>
+				<option value="20">20</option>
+				<option value="21">21</option>
+				<option value="22">22</option>
+				<option value="23">23</option>
+			</select>
+
+			<select name="dtime12" id="dtime12">
+				<option value="00">00</option>
+				<option value="30">30</option>
+			</select>
+			
+			<br><br>
+		
+		
+			<div id="drepeat">
+				<strong>Repeat :</strong>
+				<br><br>
+				
+				<input type="radio" name="nrepeat" id="iradio0" style="display:inline;" onclick="incekradio(0)" checked><label>No</label>
+				<input type="radio" name="nrepeat" id="iradio1" style="display:inline;" onclick="incekradio(1)" ><label>Daily</label>
+				<input type="radio" name="nrepeat" id="iradio2" style="display:inline;" onclick="incekradio(2)" ><label id="rday">Every Wed</label>
+				<input type="radio" name="nrepeat" id="iradio3" style="display:inline;" onclick="incekradio(3)" ><label>Monthly</label>
+				<input type="radio" name="nrepeat" id="iradio4" style="display:inline;" onclick="incekradio(4)" ><label>Yearly</label>
+
+				<br><br>
+
+
+				<label for="ddate2">End Date:&nbsp&nbsp&nbsp</label><input type="date" id="ddate2" name="ddate2">&nbsp&nbsp
+
+				<input type="checkbox" id="cbnoend">
+				<label for="cbnoend">No End</label>		
+
+				<br><br>
+
+
+			</div>
+
+			<div id="dtask" style="display:none";>
+				<label for="ddate3">Due Date:&nbsp&nbsp&nbsp</label><input type="date" id="ddate3" name="ddate3">
+				<br><br>
+			</div>
+
+
+			<span>
+			<button class="binput" type="button" onclick="insave()" style="color:white;background-color:green;">Save</button>
+			<button class="binput" type="button" onclick="delcal()" style="color:white;background-color:red;">Delete</button>
+			<button class="binput" type="button" onclick="mpopclose()" style="color:white;background-color:green;">Cancel</button>
+			
+			</span>
+			
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+var ztoday;
+
+var ndisplayscreen=1;
+// NDISPLAYSCREN = 1 MONTHLY CAL, = 2 DAILY CAL, = 3 TASK 
+
+var ndisplaymonth; // CURRENT MONTH ON DISPLAY
+var ndisplayyear; // CURRENT YEAR ON DISPLAY
+
+var aindex1=[]; // calendar
+var aindex2=[]; // task
+
+var adata1=[]; // calendar
+var adata2=[]; // task
+
+var aindexnew=[]; // CALENDAR DATA APPLIED TO DATE RANGE
+var aindexnew2=[]; // DAILY DATA 
+
+var nzrow=0; // NEW DATA COUNT FOR CALENDAR
+var nzrow2=0; // NEW DATA COUNT FOR TASK
+
+var nzeditrow=0;
+
+var acolor=["black","blue","red","white","yellow","lime"];
+var aday2=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+var months=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
+
+var ndstart; // EARLIEST DATE ON MONTHLY CALENDAR 
+var ndend; // LATEST DATE ON MONTHLY CALENDAR
+
+var nmilisecstart; // NDSTART COUNT TO MILI SECOND FROM 1 JAN 1970
+var nmilisecend; // NDEND COUNT TO MILI SECOND FROM 1 JAN 1970
+
+var nmilisechari=24*60*60*1000;
+
+var nhalfday=12*60*60*1000;
+
+var ntodayid=0;
+
+// DATA COMPOSIION
+// nsdate+"."+nstime+"."+nsdatarow+"."+nscolor+"."+nsbcolor+"."+nsrepeat+"."+nsxrepeat+"."+nsxrepeattype+"."+nsdate2;
+// 20231211     1120       003         1           2             5            12             2               20231222       
+
+//nzrow=7;
+//aindex1=[
+//"20231202.1030.001.1.2.0.0.0.20241210",
+//"20230512.1030.002.1.4.1.0.0.20241225",
+//"20231202.1000.003.2.5.2.0.0.20241216",
+//"20240115.0930.004.0.4.0.0.0.20241210",
+//"20231030.1500.005.1.5.3.0.0.20240602",
+//"20231202.1000.006.2.5.0.0.0.20241210",
+//"20231215.1530.007.1.5.4.0.0.21001215"
+//];
+//aindex1.sort();
+
+//adata1=["aaa","bbb bbb bbb bbb bbb bbb bbb bbb bbb bbb bbb bbb 112233","ccc","ddd","geee","fff","KKK"];
+
+//nzrow2=2;
+//aindex2=[
+//"20231202.1000.001.2.5.0.0.0.20231210",
+//"20231215.1530.002.1.5.0.0.0.20240215"
+//];
+//aindex2.sort();
+
+//adata2=["111","222"];
+
+// >>> === SET BEGINNING SCREEN AND STUFF =================================
+
+function gettoday(){
+	ztoday = new Date();
+
+	ndisplaymonth = ztoday.getMonth()+1;
+	ndisplayyear = ztoday.getFullYear();
+
+//	displaymonth(ndisplaymonth,ndisplayyear,2);
+	display3month(ndisplaymonth,ndisplayyear);
+	return;
+}
+
+function display3month(mm,yyyy){
+
+	document.getElementById('nowtime').innerHTML=months[mm-1]+" "+yyyy.toString();
+
+	displaymonth(mm,yyyy,2);
+
+	var mm1=mm-1;
+	if (mm1 < 1){
+		mm1 = 12;
+		yyyy1=yyyy-1;
+	}
+	else{
+		yyyy1=yyyy;
+	}
+	
+	displaymonth(mm1,yyyy1,1);
+	
+	var mm2=mm+1;
+	if (mm2 > 12){
+		mm2 = 1;
+		yyyy2=yyyy+1;
+	}
+	else{
+		yyyy2=yyyy;
+	}
+	
+	displaymonth(mm2,yyyy2,3);
+	return
+}
+
+
+
+
+function displaymonth(mm,yyyy,type){
+	
+	var nteks;
+	
+	if (type==2){
+		teks="month";
+	}
+	else if (type==1){
+		teks="miniprevmonth";
+	}
+	else if (type==3){
+		teks="mininextmonth";
+	}
+	
+	var dd = 1;
+	
+	var nfirstdate = new Date(yyyy+"-"+mm+"-"+dd);
+	
+	var nday = nfirstdate.getDay();
+	
+	// days to first box
+
+	var nsundaydate = nfirstdate;
+	nsundaydate.setDate(nsundaydate.getDate()-nday)
+
+	if (type==2) { 
+		ndstart= new Date(nsundaydate.getTime());
+	}
+	
+	
+	var ndate = nsundaydate;
+	ndate.setDate(ndate.getDate()-1)
+	
+	for	(let i = 0; i<42; i++){
+		var nid = teks+i.toString();
+		var nid2 = "isi"+i.toString();
+		
+		ndate.setDate(ndate.getDate()+1)
+
+		if (type==2 && i==0) { nmilisecstart=Date.parse(ndate); nmiliweekstart=nmilisecstart;}
+		
+		if (ndate.getDate()==1){
+			var nmonth = ndate.getMonth();
+			if (type==2) {
+				document.getElementById(nid).style.color = "red";
+				document.getElementById(nid).innerHTML = months[nmonth]+" "+ndate.getDate();
+			} else {		
+				document.getElementById(nid).style.color = "red";
+				document.getElementById(nid).innerHTML = ndate.getDate();
+			}	
+		}
+		else{
+			document.getElementById(nid).style.color = "black";
+			document.getElementById(nid).innerHTML = ndate.getDate();
+		}
+
+		if (type==2) {	document.getElementById(nid2).innerHTML =""; }
+		
+	}
+
+
+	if (type==2) { ndend=new Date(ndate.getTime()); nmilisecend=Date.parse(ndate);}
+
+
+	if (type==1){
+	
+		document.getElementById("prevmonthname").innerHTML="<p>"+months[mm-1]+" "+yyyy+"</p>";
+	}
+	else if (type==3){
+	
+		document.getElementById("nextmonthname").innerHTML="<p>"+months[mm-1]+" "+yyyy+"</p>";
+	}
+
+	if (type==2) {  databuild(); datamonth(); }
+
+	return;
+	
+}
+
+function previousmonth(){
+	ndisplaymonth=ndisplaymonth-1;
+	if (ndisplaymonth == 0){
+		ndisplaymonth = 12;
+		ndisplayyear=ndisplayyear-1;
+	}
+	
+	display3month(ndisplaymonth,ndisplayyear);
+	return;
+}
+
+function nextmonth(){
+	ndisplaymonth=ndisplaymonth+1;
+	if (ndisplaymonth > 12){
+		ndisplaymonth = 1;
+		ndisplayyear=ndisplayyear+1;
+	}
+	display3month(ndisplaymonth,ndisplayyear);
+	return;
+}
+
+
+// >>> === CALL FROM BUTTONS ===========================================
+
+function ganti(ntype) { // CALL FROM MONTHLY, DAILY, TASK
+	ndisplayscreen=ntype;
+	
+	if (ntype==1) {
+		var x = document.getElementById("harian");
+		x.style.display = "none";
+		var x = document.getElementById("task");
+		x.style.display = "none";
+		var x = document.getElementById("bulanan");
+		x.style.display = "block";
+	} else if (ntype==2) {
+		var x = document.getElementById("task");
+		x.style.display = "none";
+		var x = document.getElementById("bulanan");
+		x.style.display = "none";
+		var x = document.getElementById("harian");
+		x.style.display = "block";
+	} else {
+		var x = document.getElementById("harian");
+		x.style.display = "none";
+		var x = document.getElementById("bulanan");
+		x.style.display = "none";
+		var x = document.getElementById("task");
+		x.style.display = "block";
+		datatask();
+	}
+}
+
+function dopendaily(x) { // CALL FROM MONTHLY TABLE CELL FOR DAY DETAIL, HIDE MONTHLY, OPEN DAILY SCREEN 
+	ndisplayscreen=2;
+	
+	ntodayid=x;
+	dataday(ntodayid);
+	
+	var x = document.getElementById("bulanan");
+	x.style.display = "none";
+	var x = document.getElementById("harian");
+	x.style.display = "block";
+}
+
+// >>> === DATA BUILDING ===========================================================================
+
+function databuild() { // BUILD CALENDAR NEW ARRAY THAT APPLY TO DATA TIME RANGE
+
+aindexnew=[];
+var nlen=aindex1.length;
+
+for (let i=0; i<nlen; i++) {
+    nteks=aindex1[i];
+
+    nindex = nteks.split(".");	
+	nmilisec = nsdatemilisec(nindex[0]);
+	nrepeat=parseInt(nindex[5]);
+
+	var nmulai=stod(nindex[0]);
+	var nakhir=stod(nindex[8]);
+
+	
+	if (nrepeat==0) {
+		if (nmulai.getTime()>=ndstart.getTime() && nmulai.getTime()<=ndend.getTime()) {
+			aindexnew.push(aindex1[i]);
+		}
+	} else {
+
+
+		if (nakhir.getTime()<ndstart.getTime() || nmulai.getTime()>ndend.getTime()) {} else { 
+
+			if (nakhir.getTime()>ndend.getTime()) { nakhir = ndend; }
+		
+			switch (nrepeat) {		
+			case 1: // daily
+				var nmulai = stod(nindex[0]);
+
+
+				if (nmulai<ndstart) {
+					// loop till reach ndstart
+					do {
+						nmulai.setDate(nmulai.getDate()+1);
+					} while (nmulai.getTime()+nhalfday<ndstart.getTime());
+				}
+				// append conditioned data to new array
+				do {
+					nsdate = datestring(nmulai);
+					aindexnew.push(nsdate+nteks.substring(8));
+				
+					nmulai.setDate(nmulai.getDate()+1);
+
+//				} while (nmulai.getTime()<=ndend.getTime()+nhalfday);
+				} while (nmulai.getTime()<=nakhir.getTime()+nhalfday);
+				
+				break;
+
+			case 2: // weekly
+				var nmulai = stod(nindex[0]);
+
+				if (nmulai<ndstart) {
+					// loop till reach ndstart
+					do {
+						nmulai.setDate(nmulai.getDate()+7);
+					} while (nmulai.getTime()+nhalfday<ndstart.getTime());
+				}
+				
+				// append conditioned data to new array
+				do {
+					var nsdate = datestring(nmulai);
+					aindexnew.push(nsdate+nteks.substring(8));
+					
+					nmulai.setDate(nmulai.getDate()+7);
+
+//				} while (nmulai.getTime()<=ndend.getTime()+nhalfday);
+				} while (nmulai.getTime()<=nakhir.getTime()+nhalfday);
+		
+				break;
+
+			case 3: // monthly
+				var nmulai = stod(nindex[0]);
+
+				var nyy = ndisplayyear;
+				var nmm = ndisplaymonth;
+
+				nmm = nmm -1;
+				if ( nmm < 1 ) {
+					nmm = 12;
+					nyy = nyy-1;
+				}
+
+				do {
+					nmm = nmm + 1;
+					if ( nmm>12 ) {
+						nmm = 1;
+						nyy = nyy+1;
+					}
+
+					var ndd = nmulai.getDate();
+					
+					var ndd = validdate(nyy,nmm,ndd);
+
+					var ddate = numtodate(nyy,nmm,ndd);
+
+					if (ddate.getTime() < ndend.getTime() ) {
+						var nsdate = datestring(ddate);
+						aindexnew.push(nsdate+nteks.substring(8));
+					}	
+				
+//				} while (ddate.getTime()<=ndend.getTime());
+				} while (ddate.getTime()<=nakhir.getTime());
+				
+				break;
+
+			case 4: // yearly
+				var nmulai = stod(nindex[0]);
+
+				var nyy = ndisplayyear-1;
+				var nmm = nmulai.getMonth()+1;
+
+				do {
+					nyy = nyy + 1;
+
+					var ndd = nmulai.getDate();
+					
+					var ndd = validdate(nyy,nmm,ndd);
+
+					var ddate = numtodate(nyy,nmm,ndd);
+
+					if (ddate.getTime() < ndend.getTime() ) {
+						var nsdate = datestring(ddate);
+
+						aindexnew.push(nsdate+nteks.substring(8));
+					}	
+				
+//				} while (ddate.getTime()<=ndend.getTime());
+				} while (ddate.getTime()<=nakhir.getTime());
+				
+				break;
+
+			}
+		}
+
+	}
+}	
+
+
+}
+
+// >>> === FILL DATA TO SCREEN ==============================================================
+
+function datamonth() { // FILL IN MONTHLY CALENDAR DATA =============
+
+for (let i=0; i<42; i++) {
+	var nid="isi"+i.toString();
+	document.getElementById(nid).innerHTML="";
+}
+
+if (aindexnew.length>0) {
+
+aindexnew.sort();
+nindex=aindexnew[0].split(".");
+
+ndatarow = parseInt(nindex[2],10);
+nmili=nsdatemilisec(nindex[0]);
+nlocation0 = Math.round((nmili-nmilisecstart)/nmilisechari);
+
+var nteks="";
+var ncount=0;
+
+for (i=0; i<aindexnew.length; i++) {
+	nindex=aindexnew[i].split(".");
+
+	ncol=parseInt(nindex[3]);
+	nbcol=parseInt(nindex[4]);
+
+	ndatarow = parseInt(nindex[2],10);
+	
+	
+	nmili=nsdatemilisec(nindex[0]);
+	ntime=nindex[1].substr(0,2)+":"+nindex[1].substr(2,2);
+
+	nlocation = Math.round((nmili-nmilisecstart)/nmilisechari);
+
+	if (nlocation!=nlocation0) {
+		nid="isi"+nlocation0.toString();
+		document.getElementById(nid).innerHTML=nteks;
+		
+		nlocation0=nlocation;
+		nteks="";
+		ncount=0;
+	}
+	
+	ncount=ncount+1;
+	
+	if (ncount<4) {
+		nteks=nteks+'<div class="divisi"><h3>&#x2022;&nbsp</h3><p class="pisi" style="color:'+acolor[ncol]+';background-color:'+acolor[nbcol]+'";>'+ntime+' '+adata1[ndatarow-1]+'</p></div>';
+	}		
+	
+	if (ncount==4) {
+		nteks=nteks+'<div class="divisi"><h3>&#x2022;&nbsp</h3><p class="pisi" style="color:black;background-color:white;";>-----</p></div>';
+	}
+}
+if (aindexnew.length>0 ){
+	nid="isi"+nlocation0.toString();
+	document.getElementById(nid).innerHTML=nteks;
+}
+
+
+}
+
+
+}
+
+function dataday(x) { // FILL IN DAILY CALENDAR DATA ========================
+
+for (i=0; i<25; i++) {
+	document.getElementById("tab1").rows[i].cells[1].innerHTML="";
+}
+
+var nmilisec=nmilisecstart+x*nmilisechari;
+
+var ntgl = new Date(nmilisec);
+
+
+document.getElementById("iday").innerHTML=months[ntgl.getMonth()].toUpperCase()+" "+ntgl.getDate();
+
+var ntgl=milisectodate(nmilisec);
+
+var aindexnew2=[];
+
+for (i=0;i<aindexnew.length;i++) {
+	if (aindexnew[i].substr(0,8)==ntgl) {
+		aindexnew2.push(aindexnew[i]);
+	}
+}
+
+if (aindexnew2.length>0) {
+	var	nindex=aindexnew2[0].split(".");
+
+	var	ndate2= new Date(nindex[0].substr(0,4)+"-"+nindex[0].substr(4,2)+"-"+nindex[0].substr(6,2));
+
+	var	nmonth=ndate2.getMonth();
+	var	ntgl=ndate2.getDate();
+	var	nday = ndate2.getDay();
+
+	document.getElementById('rday').innerText="Every "+aday2[nday];
+
+	var	ntime0 = parseInt(aindexnew2[0].substr(9,2),10);
+	var	nteks="";
+
+	for (i=0;i<aindexnew2.length;i++) {
+		var		ntime = parseInt(aindexnew2[i].substr(9,2),10);
+		
+		if (ntime0!=ntime) {
+			var	nid="d"+ntime0.toString();
+
+			document.getElementById(nid).innerHTML=nteks;
+			var	nteks="";
+			var	ntime0=ntime;
+		} 
+		
+		var nindex=aindexnew2[i].split(".");
+		var	ncol=parseInt(nindex[3]);
+		var	nbcol=parseInt(nindex[4]);
+		var	ndatarow = parseInt(nindex[2],10);
+		var	nstime=nindex[1].substr(0,2)+":"+nindex[1].substr(2,2);
+		
+		var	nteks=nteks+'<div class="divisi2"><h3>&#x2022;&nbsp</h3><p class="pisi2" onclick="dinput('+ndatarow+')" style="color:'+acolor[ncol]+';background-color:'+acolor[nbcol]+'";>'+nstime+' '+adata1[ndatarow-1]+'</p></div>';
+
+	}
+
+	
+	if (aindexnew2.length>0) {
+		var	nid="d"+ntime0.toString();
+		document.getElementById(nid).innerHTML=nteks+"<br>";
+	}
+}
+}
+
+function datatask() { // FILL IN TASK DATA =========================
+
+var ttask = document.getElementById("ttask");
+
+var nlen = document.getElementById("ttask").rows.length;
+
+if (nlen>1) {
+	for (let i=1; i<nlen; i++) {
+		document.getElementById("ttask").deleteRow(1);
+	}
+}
+
+for (let i=0; i<aindex2.length; i++) {
+	var row = ttask.insertRow(-1);
+
+	// add new row
+	var cell1 = row.insertCell(0);
+	var cell2 = row.insertCell(1);
+	var cell3 = row.insertCell(2);
+	var cell4 = row.insertCell(3);
+
+	var nindex = aindex2[i].split(".");
+	var ndate1=nindex[0].substr(6,2)+"-"+nindex[0].substr(4,2)+"-"+nindex[0].substr(0,4);
+	var ndate2=nindex[8].substr(6,2)+"-"+nindex[8].substr(4,2)+"-"+nindex[8].substr(0,4);
+	
+	var ndatarow = parseInt(nindex[2],10);
+	
+	ncol=parseInt(nindex[3]);
+	nbcol=parseInt(nindex[4]);
+	
+	nteks1='<div class="divisi4"><p class="pisi4">'+ndate1+'</p></div>';
+
+	nteks2='<div class="divisi4"><p class="pisi5">'+"<input onchange='deltask("+ndatarow+")' type='checkbox'>"+'</p></div>';
+
+	nteks3='<div class="divisi3"><h3>&#x2022;&nbsp</h3><p class="pisi3" onclick="dinput('+ndatarow+')" style="color:'+acolor[ncol]+';background-color:'+acolor[nbcol]+'";>'+adata2[ndatarow-1]+'</p></div>';
+	
+	nteks4='<div class="divisi4"><p class="pisi4">'+ndate2+'</p></div>';
+	
+	cell1.innerHTML = nteks1;
+	cell2.innerHTML = nteks2;
+	cell3.innerHTML = nteks3;
+	cell4.innerHTML = nteks4;
+
+}
+
+}
+
+
+// >>> === INPUT  STUFF =========================================================
+function dinput(x) { // SET INPUT SCREEN ===========
+ 
+	if (ndisplayscreen==3) {
+		document.getElementById('intype').value=2;
+		document.getElementById('binput1').style.color="black";
+		document.getElementById('binput2').style.color="white";
+		document.getElementById('binput1').style.backgroundColor="white";
+		document.getElementById('binput2').style.backgroundColor="green";
+		document.getElementById('drepeat').style.display="none";
+		document.getElementById('dtask').style.display="block";
+
+	} else {	
+		document.getElementById('intype').value=1;
+		document.getElementById('binput1').style.color="white";
+		document.getElementById('binput2').style.color="black";
+		document.getElementById('binput1').style.backgroundColor="green";
+		document.getElementById('binput2').style.backgroundColor="white";
+		document.getElementById('dtask').style.display="none";
+		document.getElementById('drepeat').style.display="block";
+	}	
+
+	document.getElementById('cid').value=x.toString();
+
+	if (x==0) {
+		let datestring = ztoday.getFullYear().toString().padStart(4,'0') + '-' + (ztoday.getMonth()+1).toString().padStart(2, '0') + '-' + ztoday.getDate().toString().padStart(2, '0');
+		document.getElementById('ddate1').value = datestring;
+		document.getElementById('ddate2').value = datestring;
+		document.getElementById('ddate3').value = datestring;
+		
+		document.getElementById('cid').value="0";
+//		document.getElementById('intype').value="1";
+		document.getElementById('incolor').value="0";
+		document.getElementById('inbcolor').value="3";
+		document.getElementById('inrepeat').value="0";
+		document.getElementById('tarea').value="";
+		
+		document.getElementById('ihead').innerHTML="New";
+	} else {
+		document.getElementById('ihead').innerHTML="Edit";
+	
+		var ncari=x;
+		var nscari=ncari.toString().padStart(3,"0");
+		var nix = 0
+
+		if (ndisplayscreen==3) {
+			for (let i=0; i<aindex2.length; i++) {
+				if (aindex2[i].substr(14,3)==nscari) { nix=i; break;}	
+			}
+			nzeditrow=nix;
+
+			var nindex=aindex2[nix].split(".");
+		} else {
+			for (let i=0; i<aindex1.length; i++) {
+				if (aindex1[i].substr(14,3)==nscari) { nix=i; break;}	
+			}
+			nzeditrow=nix;
+
+			var nindex=aindex1[nix].split(".");
+		}
+
+		var ndatarow = parseInt(nindex[2],10);
+		var ncol=parseInt(nindex[3]);
+		var nbcol=parseInt(nindex[4]);
+		var nstime1=parseInt(nindex[1].substr(0,2),10);
+
+		var nstime2=parseInt(nindex[1].substr(2,2),10);
+				
+				
+		if (nstime2==30) { nstime2=1; } else { nstime2=0; }
+				
+
+		document.getElementById('dtime11').options.selectedIndex=nstime1;
+		document.getElementById('dtime12').options.selectedIndex=nstime2;
+
+		nsrepeat=nindex[5];
+		nradio="iradio"+nsrepeat.toString();
+
+		document.getElementById(nradio).checked= true;
+				
+		document.getElementById('inrepeat').value = nsrepeat;
+		
+		var ndate1=new Date(nindex[0].substr(0,4)+"-"+nindex[0].substr(4,2)+"-"+nindex[0].substr(6,2));
+		var datestring = ndate1.getFullYear().toString().padStart(4,'0') + '-' + (ndate1.getMonth()+1).toString().padStart(2, '0') + '-' + ndate1.getDate().toString().padStart(2, '0');
+		document.getElementById('ddate1').value = datestring;
+
+		ndate2=new Date(nindex[8].substr(0,4)+"-"+nindex[8].substr(4,2)+"-"+nindex[8].substr(6,2));
+	
+		if (ndate2.getFullYear()==2100) {
+			document.getElementById("cbnoend").checked= true;
+			document.getElementById('ddate2').value = document.getElementById('ddate1').value;
+		} else {
+			document.getElementById("cbnoend").checked= false;
+			datestring = ndate2.getFullYear().toString().padStart(4,'0') + '-' + (ndate2.getMonth()+1).toString().padStart(2, '0') + '-' + ndate2.getDate().toString().padStart(2, '0');
+			document.getElementById('ddate2').value = datestring;
+		}
+
+		if (ndisplayscreen==3) {
+			document.getElementById('tarea').value = adata2[ndatarow-1];
+		} else {
+			document.getElementById('tarea').value = adata1[ndatarow-1];
+		}	
+		document.getElementById('tarea').style.color = acolor[ncol];
+		document.getElementById('tarea').style.backgroundColor = acolor[nbcol];
+				
+		document.getElementById('incolor').value=ncol;
+		document.getElementById('inbcolor').value=nbcol;
+	}
+
+	var mpopup = document.getElementById('mpopupBox'); // OPEN INPUT SCREEN
+	mpopup.style.display = "block";
+  
+  return;
+}
+
+function mpopclose() { // CLOSE INPUT SCREEN
+	var mpopup = document.getElementById('mpopupBox');
+	mpopup.style.display = "none";
+}	
+
+
+function gantitype(ntype) { // CHANGE FROM CALENDAR TO TASK IN INPUT SCREEN
+	if (parseInt(document.getElementById('cid').value)>0) { return; }
+
+	if (ntype==1) {
+		document.getElementById('intype').value=1;
+		document.getElementById('binput1').style.color="white";
+		document.getElementById('binput2').style.color="black";
+		document.getElementById('binput1').style.backgroundColor="green";
+		document.getElementById('binput2').style.backgroundColor="white";
+		document.getElementById('dtask').style.display="none";
+		document.getElementById('drepeat').style.display="block";
+	} else {
+		document.getElementById('intype').value=2;
+		document.getElementById('binput1').style.color="black";
+		document.getElementById('binput2').style.color="white";
+		document.getElementById('binput1').style.backgroundColor="white";
+		document.getElementById('binput2').style.backgroundColor="green";
+		document.getElementById('drepeat').style.display="none";
+		document.getElementById('dtask').style.display="block";
+	}	
+}
+
+function incekradio(npil) { 
+	var ndate=document.getElementById('inrepeat').value=npil;
+}
+
+function cekhari(){ 
+	var ndate=document.getElementById('ddate1').value;
+	
+	var ndate2 = new Date(ndate);
+	var nday=ndate2.getDay();
+	
+	document.getElementById('rday').innerText="Every "+aday2[nday];
+	
+	var selTag = document.getElementById('xrepeattype');
+	selTag.options[1].text=aday2[nday];
+	
+}
+
+	
+function ganticolor(ncol) {
+	var mtrea = document.getElementById('tarea');
+
+	if (ncol<10) {
+		document.getElementById('tarea').style.color=acolor[ncol];
+		document.getElementById('incolor').value=ncol;
+	} else {		
+		document.getElementById('tarea').style.backgroundColor=acolor[ncol-10];
+		document.getElementById('inbcolor').value=ncol-10;
+	}	
+}
+
+// >>> === SAVE DATA INPUT STUFF ==============================
+
+function insave() {
+	var ntype = document.getElementById('intype').value;
+
+	// start date
+	var ndate=document.getElementById('ddate1').value;
+	var ndate2 = new Date(ndate);
+	var nsdate = datestring(ndate2);
+
+	// hour:minute
+	var e = document.getElementById('dtime11');
+	var ntime11 = e.options[e.selectedIndex].value;
+
+	var e = document.getElementById('dtime12');
+	var ntime12 = e.options[e.selectedIndex].value;
+	
+	var nstime = ntime11+ntime12;
+
+
+	// data row
+	if (document.getElementById('cid').value=="0") {
+		var nedit=0;
+		
+		if (document.getElementById('intype').value=="2") {
+			nzrow2=nzrow2+1;
+			var nsdatarow=nzrow2.toString().padStart(3,'0');
+		} else {				
+			nzrow=nzrow+1;
+			var nsdatarow=nzrow.toString().padStart(3,'0');
+		}
+		
+	} else {
+		var nedit=1;
+		var nrow = parseInt(document.getElementById('cid').value);
+		var nsdatarow= nrow.toString().padStart(3,'0');
+	}
+
+	// color
+	var ncolor = parseInt(document.getElementById('incolor').value);
+	var nscolor = ncolor.toString();
+	
+	// background color
+	var nbcolor = document.getElementById('inbcolor').value;
+	var nsbcolor = nbcolor.toString();
+
+	// repeat choice
+	var nrepeat = parseInt(document.getElementById('inrepeat').value);
+	var nsrepeat = nrepeat.toString();
+	
+	
+	if (document.getElementById("cbnoend").checked == true) {
+		nsdate2 = "21000101"; 
+	} else {
+		var ndate=document.getElementById('ddate2').value;
+		var ndate2 = new Date(ndate);
+		var nsdate2 = datestring(ndate2);
+	}
+	
+	var nsxrepeat="0";
+	var nsxrepeattype="0";
+	
+
+	if (document.getElementById('intype').value=="1") {
+
+		nindex = nsdate+"."+nstime+"."+nsdatarow+"."+nscolor+"."+nsbcolor+"."+nsrepeat+"."+nsxrepeat+"."+nsxrepeattype+"."+nsdate2;
+
+		if (nedit==0) {
+			adata1.push(document.getElementById('tarea').value);
+			aindex1.push(nindex);
+		} else {
+			adata1[nrow-1]=document.getElementById('tarea').value;
+			aindex1[nzeditrow]=nindex;
+		}
+
+		databuild();
+
+		datamonth();
+
+
+		if (ndisplayscreen==2) { dataday(ntodayid); }
+	} else {
+	
+		var ndate=document.getElementById('ddate3').value;
+		var ndate3 = new Date(ndate);
+		var nsdate3 = datestring(ndate3);
+
+
+	
+		nindex = nsdate+"."+nstime+"."+nsdatarow+"."+nscolor+"."+nsbcolor+"."+nsrepeat+"."+nsxrepeat+"."+nsxrepeattype+"."+nsdate3;
+	
+		if (nedit==0) {
+		
+			adata2.push(document.getElementById('tarea').value);
+			aindex2.push(nindex);
+			
+		} else {
+			adata2[nrow-1]=document.getElementById('tarea').value;
+			aindex2[nzeditrow]=nindex;
+		}
+	
+		if (ndisplayscreen==3) { datatask(); }
+	
+	}
+
+	if (document.getElementById('intype').value=="2" && ndisplayscreen<3) {
+		ganti(3);
+	}
+
+	if (document.getElementById('intype').value=="1" && ndisplayscreen==3) {
+		ganti(1);
+	}
+	
+	var mpopup = document.getElementById('mpopupBox');
+	mpopup.style.display = "none";
+	
+}
+
+// >>> === DELETE STUFF ========================================
+
+function delcal() { // === DELETE CALENDAR ITEM ==============
+
+var nrow=parseInt(document.getElementById("cid").value);
+
+var nscari=nrow.toString().padStart(3,"0");
+
+var nix=0;
+
+for (let i=0; i<aindex1.length; i++) {
+	if (aindex1[i].substr(14,3)==nscari) { nix=i; break;}	
+}
+
+aindex1.splice(nix,1);
+
+databuild();
+
+datamonth();
+
+if (ndisplayscreen==2) { dataday(ntodayid); }
+
+var mpopup = document.getElementById('mpopupBox');
+mpopup.style.display = "none";
+
+}
+
+
+function deltask(nrow) { // ==== DELETE TASK ITEM =========================
+
+var nscari=nrow.toString().padStart(3,"0");
+
+var nix=0;
+
+for (let i=0; i<aindex2.length; i++) {
+	if (aindex2[i].substr(14,3)==nscari) { nix=i; break;}	
+}
+
+aindex2.splice(nix,1);
+
+datatask();
+
+var mpopup = document.getElementById('mpopupBox');
+mpopup.style.display = "none";
+
+}
+
+// >>> === OTHER FUNCTION ==============================================================
+
+function numtodate(yy,mm,dd) { // == CONVERT NUMBER (2024,03,01) --> TO DATE 
+
+var ntgl = yy.toString()+"-"+mm.toString()+"-"+dd.toString();
+
+var ntglbaru = new Date(ntgl);
+
+return ntglbaru;
+
+}
+
+function validdate(yy,mm,dd) { // CHECK DATE VALIDITY, IF INVALID CHANGE DAY TO MAX DAY IN THE MONTH
+	var dmax;
+	
+	switch (mm) {
+	case 2:
+		if (yy-Math.round(yy/4)*4==0) {var dmax = 29;} else if (yy-Math.round(yy/400)*400==0) {var dmax = 29; } else { var dmax=28; }
+		break;
+	
+	case 4:
+		dmax = 30;
+		break;
+	
+	case 6:
+		dmax = 30;
+		break;
+	
+	case 9:
+		dmax = 30;
+		break;
+	
+	case 11:
+		dmax = 30;
+		break;
+	
+	default:
+		dmax = 31;
+}
+
+if (dd>dmax) { dd = dmax; }
+
+return dd;
+
+}
+
+function stod(nstr) { // CONVERT STRING "20240301" TO DATE (2024-03-01)
+
+	var ntgl = new Date( nstr.substr(0,4)+"-"+nstr.substr(4,2)+"-"+nstr.substr(6,2));
+	return ntgl;
+
+}
+
+function datestring(ntgl) { // CONVERT DATE (2024-03-01) TO STRING "20240301"
+	var now = ntgl;		
+    var y = now.getFullYear();
+    var m = now.getMonth() + 1;
+    var d = now.getDate();
+    var mm = m < 10 ? '0' + m : m;
+    var dd = d < 10 ? '0' + d : d;
+    return '' + y + mm + dd;}
+
+function milisectodate(nmilisec) { 
+	ndate = new Date(nmilisec)
+	nsdate = datestring(ndate)
+    return nsdate;
+}
+
+
+function datemilisec(ntgl) { // input date hasil milisec 1702425600000
+	return Date.parse(ntgl);
+	
+}	
+
+function nsdatemilisec(ntgl) { // input 20231202 hasil milisec
+	var ntgl2 = ntgl.substr(0,4)+"-"+ntgl.substr(4,2)+"-"+ntgl.substr(6,2);
+
+	var ndate = new Date(ntgl2);	
+	
+	var nmilisec = Date.parse(ndate);
+	
+	
+	return nmilisec;
+}	
+	
+
+</script>
+
+</body>
+</html>
